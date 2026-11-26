@@ -65,7 +65,8 @@ func StartWorker(id int, ocService *OpenCodeService, slackClient *socketmode.Cli
 					)
 
 					if updErr != nil {
-						slog.Debug("Status update tick failed: %v", updErr)
+						msg := fmt.Sprintf("Status update tick failed: %v", updErr)
+						slog.Debug(msg)
 					}
 				}
 			}

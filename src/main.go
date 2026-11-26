@@ -16,9 +16,9 @@ import (
 	"github.com/sst/opencode-sdk-go/option"
 )
 
-const numWorkers = 3 // Number of concurrent workers that will be taking requests
+const numWorkers = 3           // Number of concurrent workers that will be taking requests
 const cleanupTimerMinutes = 30 // Run the opencode session cleanup every X minutes
-const sessionMaxIdle = 60 // Clean opencode sessions that have been idle for X minutes
+const sessionMaxIdle = 60      // Clean opencode sessions that have been idle for X minutes
 
 func main() {
 	// Check if .env is correctly set up, and load env variables
@@ -131,7 +131,8 @@ func main() {
 	// (this already blocks the main goroutine, so Noelle stays alive)
 	err = slackClient.Run()
 	if err != nil {
-		slog.Error("Slack Socker Mode encountered an error: %v", err)
+		msg := fmt.Sprintf("Slack Socker Mode encountered an error: %v", err)
+		slog.Error(msg)
 		os.Exit(1)
 	}
 }
