@@ -56,7 +56,7 @@ As there is a lot of documentation online, I will not cover how to configure a S
 1. **Bot User OAuth Token** (`xoxb-...`): Needs permissions to read mentions and send messages (such as `app_mentions:read`, `chat:write`, `commands`).
 2. **App-Level Token** (`xapp-...`): With the `connections:write` scope for Socket Mode.
 
-### Configuration
+### 💮 Configuration
 
 Copy the example environment file and fill in your details:
 
@@ -84,6 +84,10 @@ OPENCODE_PROVIDER=
 # If set, needs OPENCODE_PROVIDER to be present or else this is ignored
 OPENCODE_MODEL=
 ```
+
+By default, Noelle takes as system prompts what finds in the `context/` folder. It ships with a basic system prompts that you can use, but I strongly recommend that you tune it to your specific needs before using it in production.
+
+It's kinda funny, but I need to say: when running Noelle in dev mode (I mean `go run ./src`) it is fully aware of itself being a project and respond questions about its codebase. However, when compiled to the release binary, it completely shifts into "I am the actual agent, don't ask me about myself coz I know nothing about me". I laughed. 
 
 ### Running
 
