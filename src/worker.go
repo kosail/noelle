@@ -118,9 +118,10 @@ func StartWorker(id int, ocService *OpenCodeService, slackClient *socketmode.Cli
 
 		if err != nil {
 			slog.Error(fmt.Sprintf("Worker %d failed to update final message: %v", id, err))
+			continue
 		}
 
-		if err != nil && len(msgArray) > 1 {
+		if len(msgArray) > 1 {
 			for i, msg := range msgArray[1:] {
 				_, _, err := slackClient.PostMessage(
 					job.ChannelID,
