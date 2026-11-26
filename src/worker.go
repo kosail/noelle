@@ -131,7 +131,9 @@ func StartWorker(id int, ocService *OpenCodeService, slackClient *socketmode.Cli
 					slog.Error(fmt.Sprintf("Worker %d failed to post part %d message: %v\nStopping response thread to prevent inconsistent replies!", id, i, err))
 					break
 				} else {
-					time.Sleep(250 * time.Millisecond) // Sleep to prevent API rate limiting
+					// Sleep to prevent API rate limiting.
+					// Check https://docs.slack.dev/reference/methods/chat.postMessage/#rate_limiting
+					time.Sleep(1100 * time.Millisecond)
 				}
 			}
 		}
