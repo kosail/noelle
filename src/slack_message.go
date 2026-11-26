@@ -1,43 +1,64 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 	"unicode/utf8"
 )
 
-// SplitSlackMessage splits a Slack message into multiple messages if it exceeds the maximum number of runes.
+// SplitSlackMessage splits a Slack message into multiple messages if it exceeds
+// the maximum number of runes, keeping ``` fences balanced across splits.
 func SplitSlackMessage(text string, maxRunes int) []string {
 	limit := maxRunes - 250 // Leave room for msg formatting, etc.
-	count := utf8.RuneCountInString(text)
-
-	// If the message is shorter than the limit, then just return it
-	if count < limit {
+	if limit <= 0 {
+		limit = maxRunes
+	}
+	if limit <= 0 || utf8.RuneCountInString(text) <= limit {
 		return []string{text}
 	}
 
-	// Split the message into multiple parts.
-	// 1. Make sure to break after a paragraph or on last line break.
-	// 2. If the break is found to be make inside a block of code, then close the block and reopen it in the new part
-	var result = make([]string, count/limit)
-	var lastOpensBlk = false
+	var (
+		result  []string
+		cur     strings.Builder // current chunk being built
+		curLen  int             // runes in cur
+		inFence bool            // are we inside a ``` block?
+	)
 
-	for i := 0; i < count/limit; i++ {
-		block := text[i*limit : i*limit+limit]
-
-		needsCorrection := strings.Count(block, "```")
-		if needsCorrection%2 == 0 {
-			result[i] = block
-			continue
+	flush := func() {
+		if inFence {
+			cur.WriteString("```") // close the fence in this chunk
 		}
+		result = append(result, cur.String())
+		cur.Reset()
+		curLen = 0
+		if inFence {
+			cur.WriteString("```\n") // reopen in the next chunk
+			curLen = 4
+		}
+	}
 
-		if lastOpensBlk == false {
-			result[i] = fmt.Sprintf("%s```", block)
-			lastOpensBlk = true
+	runes := []rune(text)
+	for i := 0; i < len(runes); i++ {
+		// Detect a ``` fence and toggle state. Copy all three backticks.
+		if runes[i] == '`' && i+2 < len(runes) && runes[i+1] == '`' && runes[i+2] == '`' {
+			cur.WriteString("```")
+			curLen += 3
+			inFence = !inFence
+			i += 2
 		} else {
-			result[i] = fmt.Sprintf("```%s", block)
-			lastOpensBlk = false
+			cur.WriteRune(runes[i])
+			curLen++
 		}
+
+		if curLen >= limit && i < len(runes)-1 {
+			flush()
+		}
+	}
+
+	if curLen > 0 {
+		if inFence {
+			cur.WriteString("```")
+		}
+		result = append(result, cur.String())
 	}
 
 	return result
