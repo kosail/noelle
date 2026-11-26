@@ -5,7 +5,7 @@ Noelle is a small Slack bot written in Go that answers questions about local fil
 Instead of building session management, context loading, and tool execution from scratch, Noelle talks directly to a local [OpenCode](https://opencode.ai) server. The idea is to keep things simple, practical, and easy to maintain for a small team.
 
 > [!NOTE]
-> This project was built entirely by me, except for the icon of this project, the `context/` system prompts and the indexes in `docs/`.
+> This project was built entirely by me, except for the icon of this project, the `slack_message.go` and its test, the `context/` system prompts and the indexes in `docs/`.
 > These were built iteratively and heavily optimized following several RAG and agentic design recommendations.
 >
 > I will leave the links of sources used at the bottom of this file, so you can consult them too. 
