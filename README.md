@@ -42,6 +42,8 @@ Noelle supports three different modes depending on who is asking and what kind o
 >
 > Idle sessions are cleaned up after one hour, but only cleaned up in Noelle's memory, and never from OpenCode. This automatic OpenCode cleanup may be relevant in future releases.
 
+![Noelle screenshot, running in actual Slack and responding to a message](.github/images/screenshot.webp)
+
 ## 🌷 Getting Started
 
 ### Prerequisites
